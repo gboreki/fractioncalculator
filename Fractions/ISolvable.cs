@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Fractions
 {
+    /// <summary>
+    /// Represents and Item that can be solved and returns the operand result of that expression
+    /// </summary>
     public interface ISolvable
     {
         bool CanSolve();

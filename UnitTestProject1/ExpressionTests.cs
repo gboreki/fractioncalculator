@@ -27,8 +27,7 @@ namespace UnitTestProject1
             var parser = new ExpressionParser();
             var sut = parser.Parse(cmd);
             var result = sut.Solve();
-            Assert.AreEqual(7, result.Numerator);
-            Assert.AreEqual(8, result.Denominator);
+            Assert.AreEqual("1_7/8", result.AsProperFractionString());
         }
 
         [TestMethod]
@@ -38,8 +37,7 @@ namespace UnitTestProject1
             var parser = new ExpressionParser();
             var sut = parser.Parse(cmd);
             var result = sut.Solve();
-            Assert.AreEqual(3, result.Numerator);
-            Assert.AreEqual(2, result.Denominator);
+            Assert.AreEqual("3_1/2", result.AsProperFractionString());
         }
     }
 }

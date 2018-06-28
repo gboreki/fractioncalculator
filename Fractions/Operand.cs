@@ -57,7 +57,8 @@ namespace Fractions
         public bool CanSolve()
         {
             return (Numerator > 1 && (Denominator % Numerator == 0))
-                || Denominator > 1 && Denominator <= Numerator && (Numerator % Denominator == 0);
+                || Denominator > 1 && Denominator <= Numerator && (Numerator % Denominator == 0)
+                || FindGreatestDivisor(Numerator, Denominator) > 1;
         }
 
         public Operand Solve()
@@ -89,8 +90,27 @@ namespace Fractions
                 newFraction.Numerator = newFraction.Numerator / newFraction.Denominator;
                 newFraction.Denominator = 1;                
             }
+
+            var divisor = FindGreatestDivisor(Numerator, Denominator);
+            if (divisor > 1)
+            {
+                newFraction.Denominator = Denominator / divisor;
+                newFraction.Numerator = Numerator / divisor;
+            }
             // 
             return newFraction;
+        }
+
+        // ref: https://en.wikipedia.org/wiki/Euclidean_algorithm#Implementations
+        int FindGreatestDivisor(int first, int second)
+        {
+            while (second > 0)
+            {
+                var rem = first % second;
+                first = second;
+                second = rem;
+            }
+            return first;
         }
 
         public bool IsFraction()
@@ -101,6 +121,31 @@ namespace Fractions
         public override string ToString()
         {
             return Numerator.ToString() + "/" + Denominator.ToString();
+        }
+
+        public string AsProperFractionString()
+        {
+            int numerator = Numerator;
+            int denominator = Denominator;
+
+            if (Numerator > Denominator)
+            {
+                int whole = Numerator / Denominator;
+                numerator = Numerator % Denominator;
+
+                // Potential for improvement, this is already done as part of simplify
+                // but would require a new operand here.
+                int divisor = FindGreatestDivisor(numerator, denominator);
+                if (divisor > 1)
+                {
+                    numerator /= divisor;
+                    denominator /= divisor;
+                }
+
+                return $"{whole}_{numerator}/{denominator}";   
+            }
+            
+            return $"{Numerator}/{denominator}";
         }
 
         private void ValidateOrThrow()

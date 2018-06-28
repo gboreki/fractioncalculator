@@ -19,8 +19,12 @@ namespace Fractions
 
             candidate = candidate.Substring(2);
 
+            // Split the string based on the format of operators
             var tokens = Regex.Split(candidate, @"(\s+[*]\s+)|(\s+[/]\s+)|(\s+[+]\s+)|(\s+[-]\s+)");
-            if (tokens.Length != 1 && ((tokens.Length -1) % 2 != 0))  // Since all operators are binary, we expect it to be
+
+            // Since we dont support parenthesis, we can check based on expected number
+            // of operands and operator. 
+            if (tokens.Length != 1 && ((tokens.Length -1) % 2 != 0))  
             {
                 throw new ArgumentException("Incomplete expression");
             }

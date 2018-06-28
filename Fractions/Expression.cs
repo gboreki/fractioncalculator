@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Fractions
 {
+    /// <summary>
+    /// Represents an expression tree. Basic form with a right, operator and left
+    /// </summary>
     public class Expression : ISolvable
     {
         public Expression(IOperator op, Expression parent)

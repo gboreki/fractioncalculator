@@ -10,6 +10,10 @@ namespace Fractions
     {
         static void Main(string[] args)
         {
+            var input = Console.ReadLine();
+            var parser = new ExpressionParser();
+            var solvable = parser.Parse(input);
+            Console.WriteLine(solvable.Solve().AsProperFractionString());
         }
     }
 }
