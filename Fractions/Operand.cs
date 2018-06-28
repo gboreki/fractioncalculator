@@ -1,27 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Fractions
 {
     // 6:47
     /// <summary>
-    /// An instance of this class represents a valid fraction
+    /// An instance of this class represents a valid fraction,
+    /// The whole part is ommited during calculations
     /// </summary>
     public sealed class Operand : ISolvable
     {
-        public int Whole { get; private set;  }
         public int Numerator { get; private set; }
         public int Denominator { get; private set; }
 
-        public static Operand Create(int whole, int numerator, int denominator)
+        public static Operand Create(int numerator, int denominator)
         {
             return new Operand
             {
-                Whole = whole,
                 Numerator = numerator,
                 Denominator = denominator
             };
@@ -32,15 +27,25 @@ namespace Fractions
             if (!match.Success)
                 throw new ArgumentException("Invalid Fraction");
 
-            var numerator = ParseGroup(match.Groups["numerator"], 1);
-            var denominator = ParseGroup(match.Groups["denominator"], 1);
-            var whole = ParseGroup(match.Groups["whole"], 1);
+            var whole = ParseGroup(match.Groups["whole"]);            
+            var numerator = ParseGroup(match.Groups["numerator"]);
+            var denominator = ParseGroup(match.Groups["denominator"]);
+
+            // fraction + whole
+            if (whole.HasValue && whole > 1 && numerator.HasValue && denominator.HasValue)
+            {
+                numerator = numerator + whole * denominator;
+            }
+            else if (whole.HasValue  && !numerator.HasValue && !denominator.HasValue)
+            {
+                numerator = whole;
+                denominator = 1;
+            }
 
             var candidateFraction = new Operand
             {
-                Denominator = denominator,
-                Numerator = numerator,
-                Whole = whole
+                Denominator = denominator.Value,
+                Numerator = numerator.Value
             };
 
             candidateFraction.ValidateOrThrow();
@@ -51,11 +56,11 @@ namespace Fractions
         // or numerator is divisible by denominator
         public bool CanSolve()
         {
-            return (Whole > 1 && Denominator > 1) 
-                || (Numerator > 1 && (Denominator % Numerator == 0));
+            return (Numerator > 1 && (Denominator % Numerator == 0))
+                || Denominator > 1 && Denominator <= Numerator && (Numerator % Denominator == 0);
         }
 
-        public ISolvable Solve()
+        public Operand Solve()
         {
             return Simplify();
         }
@@ -69,16 +74,9 @@ namespace Fractions
 
             var newFraction = new Operand
             {
-                Whole = Whole,
                 Numerator = Numerator,
                 Denominator = Denominator
             };
-
-            if (newFraction.Whole > 1)
-            {
-                newFraction.Numerator = newFraction.Numerator * newFraction.Whole;
-                newFraction.Whole = 1;
-            }
 
             if (newFraction.Numerator > 1 && (newFraction.Denominator % newFraction.Numerator == 0))
             {
@@ -88,9 +86,8 @@ namespace Fractions
 
             if (newFraction.Denominator > 1 && newFraction.Denominator <= newFraction.Numerator && (newFraction.Numerator % newFraction.Denominator == 0))
             {
-                newFraction.Whole = newFraction.Numerator / newFraction.Denominator;
-                newFraction.Denominator = 1;
-                newFraction.Numerator = 1;
+                newFraction.Numerator = newFraction.Numerator / newFraction.Denominator;
+                newFraction.Denominator = 1;                
             }
             // 
             return newFraction;
@@ -101,23 +98,25 @@ namespace Fractions
             return Numerator != Denominator;
         }
 
+        public override string ToString()
+        {
+            return Numerator.ToString() + "/" + Denominator.ToString();
+        }
+
         private void ValidateOrThrow()
         {
             if (Denominator == 0)
                 throw new ArgumentException("Denominator can't be null");
-
-            if (!IsProper() && Whole > 1)
-                throw new ArgumentException("Fraction can't be Improper and have whole part");
         }
 
-        private static int ParseGroup(Group group, int defaultInt)
+        private static int? ParseGroup(Group group)
         {
             if (group.Success)
             {
                 return Int32.Parse(group.Value);
             }
 
-            return defaultInt;
+            return null;
         }
 
         private bool IsProper()

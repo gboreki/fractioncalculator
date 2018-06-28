@@ -9,7 +9,6 @@ namespace Fractions
     public interface ISolvable
     {
         bool CanSolve();
-
-        ISolvable Solve();
+        Operand Solve();
     }
 }

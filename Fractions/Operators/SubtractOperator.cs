@@ -2,11 +2,11 @@
 
 namespace Fractions.Operators
 {
-    public class AddOperator : IOperator
+    public class SubtractOperator : IOperator
     {
         public int Priority => 1;
 
-        public char Symbol => '+';
+        public char Symbol => '-';
 
         public Operand Solve(Operand p1, Operand p2)
         {
@@ -15,7 +15,7 @@ namespace Fractions.Operators
 
             if (p1.Denominator == p2.Denominator)
             {
-                return Operand.Create(p1.Numerator + p2.Numerator, p1.Denominator);
+                return Operand.Create(p1.Numerator - p2.Numerator, p1.Denominator);
             }
 
             var denominator1 = p1.Denominator;
@@ -25,7 +25,7 @@ namespace Fractions.Operators
             var newOperand2 = Operand.Create(denominator1 * p2.Numerator, denominator1 * p2.Denominator);
 
             Debug.Assert(newOperand1.Denominator == newOperand2.Denominator);
-            return Operand.Create(newOperand1.Numerator + newOperand2.Numerator, newOperand1.Denominator);
+            return Operand.Create(newOperand1.Numerator - newOperand2.Numerator, newOperand1.Denominator).Simplify();
 
         }
     }

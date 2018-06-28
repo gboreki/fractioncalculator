@@ -8,18 +8,53 @@ namespace Fractions
 {
     public class Expression : ISolvable
     {
-        private readonly IOperator _operator;
-        public ISolvable Right { get; private set; }
-        public ISolvable Left { get; private set; }
+        public Expression(IOperator op, Expression parent)
+        {
+            Operator = op;
+            Parent = parent;
+        }
+
+        public Expression Parent { get; set; }
+        public IOperator Operator { get; private set; }
+        public ISolvable Right { get; set; }
+        public ISolvable Left { get; set; }
 
         public bool CanSolve()
         {
             return true;    // Assume all operations are solvable
         }
 
-        public ISolvable Solve()
+        public Operand Solve()
         {
-            return _operator.Solve(Right, Left);
+            Operand right = null;
+            Operand left = null;
+            if (Right != null)
+            {
+                right = Right.Solve();
+            }
+            if (Left != null)
+            {
+                left = Left.Solve();
+            }
+
+            return Operator.Solve(right, left);
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(" (");
+            if (Left != null)
+                sb.Append(Left.ToString());
+
+            sb.Append(Operator.Symbol);
+
+            if (Right != null)
+                sb.Append(Right.ToString());
+
+            sb.Append(") ");
+            return sb.ToString();
         }
     }
 }

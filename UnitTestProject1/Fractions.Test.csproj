@@ -48,7 +48,12 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExpressionParserTests.cs" />
+    <Compile Include="ExpressionTests.cs" />
     <Compile Include="FractionsTests.cs" />
+    <Compile Include="Operators\DivideOperatorTests.cs" />
+    <Compile Include="Operators\SubtractOperatorTests.cs" />
+    <Compile Include="Operators\MultiplyOperatorTests.cs" />
     <Compile Include="Operators\AddOperatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

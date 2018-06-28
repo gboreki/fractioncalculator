@@ -43,10 +43,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Expression.cs" />
+    <Compile Include="ExpressionParser.cs" />
+    <Compile Include="ISolvable.cs" />
     <Compile Include="Operand.cs" />
+    <Compile Include="Operators\DivideOperator.cs" />
+    <Compile Include="Operators\SubtractOperator.cs" />
     <Compile Include="Operators\AddOperator.cs" />
     <Compile Include="Operators\IOperator.cs" />
-    <Compile Include="ISolvable.cs" />
+    <Compile Include="Operators\MultiplyOperator.cs" />
+    <Compile Include="Operators\OperatorFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
